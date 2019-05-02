@@ -33,7 +33,7 @@ public class TestSetup {
 
     private ResultReporter reporter;
     private ThreadLocal<IOSDriver> driver = new ThreadLocal<IOSDriver>();
-  
+
   /**
    * DataProvider that explicitly sets the browser combinations to be used.
    *
@@ -45,20 +45,20 @@ public class TestSetup {
       return new Object[][]{
     		  //Verify that your account has access to the devices below
              new Object[]{"iOS", "iPhone 7", "10"},
-             new Object[]{"iOS", "iPhone 8", "11"}
+             new Object[]{"iOS", "iPad Air 3", "12.2"}
       };
-  }  
-  
+  }
+
   private IOSDriver createDriver(String platformName, String platformVersion, String deviceName, String methodName) throws MalformedURLException {
-  	
+
       DesiredCapabilities capabilities = new DesiredCapabilities();
-      capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY"));
+      capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY_IOS"));
       capabilities.setCapability("deviceName", deviceName);
       capabilities.setCapability("platformVersion", platformVersion);
       capabilities.setCapability("platformName", platformName);
       capabilities.setCapability("name",  methodName);
-      capabilities.setCapability("appiumVersion", "1.7.2");
-      
+      // capabilities.setCapability("appiumVersion", "1.7.2");
+
       driver.set(new IOSDriver<WebElement>(
               new URL(System.getenv("APPIUM_URL")),
               capabilities));
@@ -85,7 +85,7 @@ public class TestSetup {
         driver.getScreenshotAs(OutputType.FILE);
         buttonEquals.click();
         driver.getScreenshotAs(OutputType.FILE);
-        
+
         /* Check if within given time the correct result appears in the designated field. */
         (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "5"));
     }
@@ -100,7 +100,7 @@ public class TestSetup {
         reporter.saveTestStatus(sessionId, success);
         driver.quit();
     }
-    
+
     /**
      * @return the {@link WebDriver} for the current thread
      */
