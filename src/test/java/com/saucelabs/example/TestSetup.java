@@ -34,6 +34,10 @@ public class TestSetup {
     private ResultReporter reporter;
     private ThreadLocal<IOSDriver> driver = new ThreadLocal<IOSDriver>();
 
+    public String username = System.getenv("SAUCE_USERNAME");
+
+    public String accesskey = System.getenv("SAUCE_ACCESS_KEY");
+
   /**
    * DataProvider that explicitly sets the browser combinations to be used.
    *
@@ -44,32 +48,86 @@ public class TestSetup {
   public static Object[][] sauceBrowserDataProvider(Method testMethod) {
       return new Object[][]{
     		  //Verify that your account has access to the devices below
-             new Object[]{"iOS", "iPhone 7", "10"},
-             new Object[]{"iOS", "iPad Air 3", "12.2"}
+             // new Object[]{"iOS"},
+             new Object[]{"iOS", "12.2", "iPhone 8 Simulator"}
+             // new Object[]{"iOS", "iPad Air 3", "12.2"}
+             // new Object[]{"iOS", "iPad Air 3"}
       };
   }
 
   private IOSDriver createDriver(String platformName, String platformVersion, String deviceName, String methodName) throws MalformedURLException {
 
       DesiredCapabilities capabilities = new DesiredCapabilities();
-      capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY_IOS"));
+      // capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_IOS_CALC_KEY"));
       capabilities.setCapability("deviceName", deviceName);
       capabilities.setCapability("platformVersion", platformVersion);
       capabilities.setCapability("platformName", platformName);
       capabilities.setCapability("name",  methodName);
-      // capabilities.setCapability("appiumVersion", "1.7.2");
+      capabilities.setCapability("appiumVersion", "1.13.0");
+      capabilities.setCapability("browserName", "");
+      capabilities.setCapability("app", "sauce-storage:saucegp.zip");
 
       driver.set(new IOSDriver<WebElement>(
-              new URL(System.getenv("APPIUM_URL")),
+              // new URL(System.getenv("APPIUM_URL")),
+              new URL("https://" + username + ":" + accesskey + "@ondemand.saucelabs.com/wd/hub"),
               capabilities));
       return driver.get();
   }
 
     /* A simple addition, it expects the correct result to appear in the result field. */
     @Test(dataProvider = "devices")
-    public void twoPlusThreeOperation(String platformName, String deviceName, String platformVersion, Method method) throws MalformedURLException {
+    public void twoPlusThreeOperation(String platformName, String platformVersion, String deviceName, Method method) throws MalformedURLException {
 
     	IOSDriver driver = createDriver(platformName, platformVersion, deviceName, method.getName());
+
+        /* Get the elements. */
+        MobileElement buttonTwo = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("2")));
+        MobileElement buttonThree = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("3")));
+        MobileElement buttonPlus = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("+")));
+        MobileElement buttonEquals = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("=")));
+        MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//XCUIElementTypeStaticText|//UIAApplication[1]/UIAWindow[1]/UIAStaticText[1]")));
+
+        /* Add two and two. */
+        buttonTwo.click();
+        buttonPlus.click();
+        buttonThree.click();
+        driver.getScreenshotAs(OutputType.FILE);
+        buttonEquals.click();
+        driver.getScreenshotAs(OutputType.FILE);
+
+        /* Check if within given time the correct result appears in the designated field. */
+        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "5"));
+    }
+
+    /* A simple addition, it expects the correct result to appear in the result field. */
+    @Test(dataProvider = "devices")
+    public void twoPlusThree(String platformName, String platformVersion, String deviceName, Method method) throws MalformedURLException {
+
+      IOSDriver driver = createDriver(platformName, platformVersion, deviceName, method.getName());
+
+        /* Get the elements. */
+        MobileElement buttonTwo = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("2")));
+        MobileElement buttonThree = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("3")));
+        MobileElement buttonPlus = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("+")));
+        MobileElement buttonEquals = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("=")));
+        MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//XCUIElementTypeStaticText|//UIAApplication[1]/UIAWindow[1]/UIAStaticText[1]")));
+
+        /* Add two and two. */
+        buttonTwo.click();
+        buttonPlus.click();
+        buttonThree.click();
+        driver.getScreenshotAs(OutputType.FILE);
+        buttonEquals.click();
+        driver.getScreenshotAs(OutputType.FILE);
+
+        /* Check if within given time the correct result appears in the designated field. */
+        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "5"));
+    }
+    /* A simple addition, it expects the correct result to appear in the result field. */
+    @Test(dataProvider = "devices")
+    public void twoPlusThreeTest(String platformName, String platformVersion, String deviceName, Method method) throws MalformedURLException {
+
+      IOSDriver driver = createDriver(platformName, platformVersion, deviceName, method.getName());
 
         /* Get the elements. */
         MobileElement buttonTwo = (MobileElement)(driver.findElement(MobileBy.AccessibilityId("2")));
