@@ -31,6 +31,8 @@ public class TestSetup {
 
     public String buildTag = System.getenv("BUILD_TAG");
 
+    public String tunnelId = System.getenv("TUNNEL_IDENTIFIER");
+
     /**
      * ThreadLocal variable which contains the  {@link IOSDriver} instance which is used to perform browser interactions with.
      */
@@ -94,7 +96,13 @@ public class TestSetup {
       capabilities.setCapability("platformName", platformName);
       capabilities.setCapability("name",  methodName);
       capabilities.setCapability("build",  buildTag);
-      capabilities.setCapability("tunnelIdentifier", "allTheRDC");
+
+      capabilities.setCapability("tunnelIdentifier", tunnelId);
+
+      if (tunnelId != null) {
+          capabilities.setCapability("tunnelIdentifier", tunnelId);
+      }
+
       capabilities.setCapability("appiumVersion", "1.17.1");
 //      capabilities.setCapability("browserName", "Safari");
 //      capabilities.setCapability("app", "storage:dc565179-cb52-4ca3-a25d-484b8136a542"); //UP RDC
