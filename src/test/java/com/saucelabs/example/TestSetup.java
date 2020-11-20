@@ -77,11 +77,12 @@ public class TestSetup {
       capabilities.setCapability("platformVersion", platformVersion);
       capabilities.setCapability("platformName", platformName);
       capabilities.setCapability("name",  methodName);
-//      capabilities.setCapability("tunnelIdentifier", "TUNNEL_ID");
+      capabilities.setCapability("tunnelIdentifier", "TUNNEL_ID");
       capabilities.setCapability("appiumVersion", "1.17.1");
 //      capabilities.setCapability("browserName", "Safari");
-      capabilities.setCapability("app", "storage:dc565179-cb52-4ca3-a25d-484b8136a542"); //UP RDC
+//      capabilities.setCapability("app", "storage:dc565179-cb52-4ca3-a25d-484b8136a542"); //UP RDC
 //      capabilities.setCapability("app", "storage:bcd8c2ef-3e9b-46cc-ad29-36176c07c00b"); //emusim
+      capabilities.setCapability("app", "https://github.com/alexgriffen/RDC-Java-TestNG-Appium-iOS-Dynamic/raw/master/CalculatorAlex.ipa"); // remote hosted for CI
 
 
       driver.set(new IOSDriver<WebElement>(
